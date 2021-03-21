@@ -1,3 +1,37 @@
+## 在03compiler->00-gen->genEnglish.c
+>* how to run it,we should do:" gcc genEnglish.c rlib.c -o genEnglish " first
+* 這段程式是座以下三個陣列的隨機組合
+```
+char* n[] = {"dog", "cat"};
+char* v[] = {"chase", "eat"};
+char* det[] = {"a", "the"};
+```
+>* 運用./genEnglish來執行就行
+* 就會出現以下這幾種可能
+```
+1. a dog eat a dog
+2. the cat chase a dog
+3.  the cat chase the cat
+...
+```
+
+## 在03compiler->00-gen->genExp.c
+>* 編譯它:gcc genExp.c rlib.c -o genExp
+>* 執行它:./genExp
+>* 會產生隨機十組答案，以下就是其中一組的執行結果
+```
+9/0
+6/(4/3)
+(7/0)*3
+8/0
+1
+5/6
+(5*3)
+(6*((4)/7-(0/8)-4/(6*8)))/9
+0/8
+7*5
+```
+
 ## compiler
 >* STEP1: 需要先做語法(Syntax)上的處理,1.Lexer 2. Parser
 >* STEP2: Semantic(型態檢查)語意
@@ -153,5 +187,3 @@ void genOp2(int i, int i1, char op, int i2) {
   printf("M=D\n");
 }
 ```
-
-
