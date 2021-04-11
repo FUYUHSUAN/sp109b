@@ -38,3 +38,23 @@ void FOR() { //(assign e;e)stmt
   emit("(L%d)\n",forEnd);
 }
 ```
+>* 執行結果
+```
+============ parse =============
+(L0)
+t0 = 0
+i = t0
+t1 = i
+t2 = 5
+t3 = t1 <= t2
+if not t3 goto L1
+t5 = a
+t6 = 1
+t7 = t5 + t6
+a = t7
+i = i + 1  //較完整版是在最後才++
+t4 = i
+
+goto L0
+(L1)
+```
