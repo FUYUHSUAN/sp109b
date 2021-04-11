@@ -7,7 +7,7 @@ char tempIr[100000], *tempIrp = tempIr;
 
 #define emit(...) ({ \      
   if (isTempIr) { \                       //如果等於一時，會進這邊
-    sprintf(tempIrp, __VA_ARGS__); \      //不會印出來，而且我們將其在此存起來
+    sprintf(tempIrp, __VA_ARGS__); \      //不會印出來，而且我們將其在此存起來(將參數印到tempIrp中)
     tempIrp += strlen(tempIrp);\
   } else { \                              //如果等於零時，會進這邊
     printf(__VA_ARGS__);\                 //在這邊我們就會印出來
