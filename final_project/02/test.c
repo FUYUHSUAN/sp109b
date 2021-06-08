@@ -7,4 +7,5 @@ int main() {
 		    if(c=='w')printf("success write");
 	    }
 	      return 0;
+	
 }
