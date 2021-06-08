@@ -35,6 +35,13 @@ int main(int argc, char *argv[]) {
 	      if (argc >= 2) {
 		          editorOpen(argv[1]);
 			    }
-	    
+//test	    
 		  return 0;
 }
+
+
+
+
+
+
+
