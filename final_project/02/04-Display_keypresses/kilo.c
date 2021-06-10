@@ -25,7 +25,7 @@ int main(){
 
 	char c;
 	while(read(STDIN_FILENO, &c, 1) == 1 && c != 'q'){
-		if(iscntrl(c)){
+		if(iscntrl(c)){     //傳遞的字符是否為一個控製字符
 			printf("%d\n", c);
 		}else{
 			printf("%d ('%c')\n", c, c);
