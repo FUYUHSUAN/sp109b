@@ -1,43 +1,20 @@
-# 關閉覆讀功能
+# 關閉RawMode
 
-本程式輸入時看不到任何輸入，但是會聽得見任何我們打的指令，按下Ctrl+C或是打上reset可以跳出來
+本程式會一次讀一個字元，然後讀到q時會跳出去
+
+* 在linux中要掌控一切才能做出vim，所以要能控制到每個鍵盤，每個字元的輸入
 
 * `make` : 先編譯
 
-* `struct termios` , `tcgetattr()` , `tcsetattr()` , `ECHO` 和 `TCSAFLUSH`  是來自 <termios.h>
+* `ICANON` :這表示canonical mode模式，的意思是具能有特殊自元功能，例如EOF, EOL, EOL2...
+    * 因此在這段程式中我們關閉這個功能 ，使用 `raw.c_lflag &= ~(ECHO | ICANON);` 來將其設為diable
 
-* 整段程式碼
-    ```c
-    #include <termios.h>
-    #include <unistd.h>
-
-    void enableRawMode(){
-        struct termios raw; 
-
-        tcgetattr(STDIN_FILENO, &raw);
-
-        raw.c_lflag &= ~(ECHO);
-
-        tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
-    }
-    int main(){
-        enableRawMode();
-
-        char c;
-        while(read(STDIN_FILENO, &c, 1) == 1 && c != 'q');
-        return 0;
-    }
-
+* 以下這段程式用來關閉Rawmode的功能
     ```
-
-    * `tcgetattr` 和 `tcsetattr` **:** 是linux用來控制終端
-
-    * `raw.c_lflag &= ~(ECHO);` **:** 將ECHO設為disable，其中ECHO是用來顯示字元
-
-    * `TCSAFLUSH` **:** 清空輸入輸出緩衝區才改變屬性
-    
-
-
+    void disableRawMode(){
+        tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
+    }
+    ```
 
 ---
 **參考資料:**
