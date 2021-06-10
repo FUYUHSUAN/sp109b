@@ -6,6 +6,8 @@
 
 * `struct termios` , `tcgetattr()` , `tcsetattr()` , `ECHO` 和 `TCSAFLUSH`  是來自 <termios.h>
 
+* <termios.h> : linux & unix 中控制終端機的函式庫
+
 * 整段程式碼
     ```c
     #include <termios.h>
@@ -31,6 +33,7 @@
     ```
 
     * `tcgetattr` 和 `tcsetattr` **:** 是linux用來控制終端
+        * `tcgetattr` :取得現在狀態
 
     * `raw.c_lflag &= ~(ECHO);` **:** 將ECHO設為disable，其中ECHO是用來顯示字元
 
