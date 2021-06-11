@@ -15,10 +15,10 @@
 struct editorConfig {
 	int screenrows;
 	int screencols;
-	struct termios orig_termios;
+	struct termios orig_termios; //用來存取終端的寬度與高度
 };
 
-struct editorConfig E; 
+struct editorConfig E;  //全域變數E，使用E.orig_termios來替換所有的orig_termios
 
 /*** terminal***/
 void die(const char *s){
@@ -102,8 +102,10 @@ void editorProcessKeypress(){
 
 /*** init ***/
 
-void initEditor(){
+void initEditor(){  //設置initEditor()來初始化E結構中的所有字段
 	if(getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
+}
+
 int main(){
 	enableRawMode();
 	initEditor();

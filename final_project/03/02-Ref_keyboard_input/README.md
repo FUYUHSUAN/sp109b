@@ -19,5 +19,5 @@
 ---
 **參考資料:**
 
-* [kilo](https://viewsourcecode.org/snaptoken/kilo/02.enteringRawMode.html)
+* [kilo](https://viewsourcecode.org/snaptoken/kilo/03.rawInputAndOutput.html)
 
