@@ -1,33 +1,21 @@
-# Ctrl-W去停止此程式
+# 重新建構鍵盤輸入
 
-kilo原本是使用Ctrl+Q去跳掉，但是VSCode會攔截事件，所以我使用Ctrl+Q去跳掉
+* 如果輸入失敗而且不是沒有輸入
+    ```
+    if (nread == -1 && errno != EAGAIN) die("read");
+    ```
+* 當讀到字元時，如果按下Ctrl+W就會離開
+    ```
+    void editorProcessKeypress() {
+    char c = editorReadKey();
+    switch (c) {
+        case CTRL_KEY('q'):
+        exit(0);
+        break;
+    }
+    }
+    ```
 
-* 這段程式是用來偵測輸入的Ctrl+我們指定的按鍵
-    ```
-    #define CTRL_KEY(k) ((k) & 0x1f)
-    ```
-
-* 這段式如果Ctrl+w時會跳出去
-    ```
-    if (c == CTRL_KEY('w')) break;
-    ```
-
-* 執行結果:一直輸出Null直到感受到Ctrl+w時結束，感受到其他案件時會知道是甚麼事件，然後輸出相對應的ASCII
-```
-root@localhost:~/sp109b/final_project/03/01# ./kilo
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
-23
-```
 ---
 **參考資料:**
 
