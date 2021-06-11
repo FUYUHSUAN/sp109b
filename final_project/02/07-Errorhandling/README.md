@@ -1,10 +1,11 @@
-# 錯誤處理
+# 重建鍵盤輸入
+* `if(nread == -1 && errno != EAGAIN) die("read");` : 沒有讀到，且錯誤不是沒有資料實惠印出錯誤訊息
 
-* die() :是用來印出錯誤訊息
+* 在這段程式將原本的程式拆為兩個涵式去管理
 
-* 在這段程式做了許多錯誤處理，其中tcsetattr(), tcgetattr(), and read()如果錯誤時會回傳-1
+* `editorReadKey()`:用來等待按鍵輸入，然後回傳值
 
-
+* `editorProcessKeypress()` :判斷是否為Ctrl+w然後跳出
 ---
 **參考資料:**
 

@@ -25,7 +25,7 @@ void disableRawMode(){
 }
 
 void enableRawMode(){
-	if(tcgetattr(STDIN_FILENO, &origin_termios) == -1) die("tcgetattr");
+	if(tcgetattr(STDIN_FILENO, &orig_termios) == -1) die("tcgetattr");
 	atexit(disableRawMode);
 
 	struct termios raw = orig_termios;
@@ -39,19 +39,33 @@ void enableRawMode(){
 	if(tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) die("tcsetattr");
 }
 
+char editorReadKey(){
+	int nread;
+	char c;
+	while((nread = read(STDIN_FILENO, &c, 1)) != 1){
+		if(nread == -1 && errno != EAGAIN) die("read"); //沒有讀到，且錯誤不是沒有資料
+	}
+	return 0;
+}
+
+/***input***/
+
+void editorProcessKeypress(){
+	char c = editorReadKey();
+
+	switch (c) {
+		case CTRL_KEY('w'):
+			exit(0);
+			break;
+	}
+}
+
 /*** init ***/
 int main(){
 	enableRawMode();
 
 	while(1){
-		char c = '\0';
-		if(read(STDIN_FILENO, &c, 1) == -1 && erron !=EAGAIN) die("read");
-		if(iscntrl(c)){
-			printf("%d\r\n", c);
-		}else{
-			printf("%d ('%c')\r\n", c, c);
-		}
-	if (c == CTRL_KEY('q')) break;
+		editorProcessKeypress();
 	}
 	return 0;
 }
