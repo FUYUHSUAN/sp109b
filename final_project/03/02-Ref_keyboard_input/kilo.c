@@ -45,7 +45,7 @@ char editorReadKey(){
 	while((nread = read(STDIN_FILENO, &c, 1)) != 1){
 		if(nread == -1 && errno != EAGAIN) die("read"); //沒有讀到，且錯誤不是沒有資料
 	}
-	return 0;
+	return c;
 }
 
 /***input***/

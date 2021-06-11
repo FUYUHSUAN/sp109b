@@ -15,6 +15,8 @@ struct termios orig_termios;
 
 /*** terminal***/
 void die(const char *s){
+	write(STDOUT_FILENO, "\x1b[2J", 4);
+	write(STDOUT_FILENO, "\x1b[H", 3);
 	perror(s);
 	exit(1);
 }
@@ -45,13 +47,14 @@ char editorReadKey(){
 	while((nread = read(STDIN_FILENO, &c, 1)) != 1){
 		if(nread == -1 && errno != EAGAIN) die("read"); //沒有讀到，且錯誤不是沒有資料
 	}
-	return 0;
+	return c;
 }
 
 /***output***/
 
 void editorRefreshScreen() {
-	write(STDIN_FILENO, "\x1b[2J", 4);
+	write(STDOUT_FILENO, "\x1b[2J", 4);
+	write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
 /***input***/
@@ -61,6 +64,7 @@ void editorProcessKeypress(){
 
 	switch (c) {
 		case CTRL_KEY('w'):
+			write(STDOUT_FILENO, "\x1b[2J", 4);
 			exit(0);
 			break;
 	}
