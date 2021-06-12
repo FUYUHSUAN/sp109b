@@ -136,7 +136,7 @@ void editorRefreshScreen() {
   abAppend(&ab, "\x1b[2J", 4);
   abAppend(&ab, "\x1b[H", 3);
 
-  editorDrawRows();
+  editorDrawRows(&ab);
 
   abAppend(&ab, "\x1b[H", 3);
 
