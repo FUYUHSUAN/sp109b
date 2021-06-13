@@ -173,7 +173,7 @@ void editorAppendRow(char *s, size_t len){
   int at = E.numrows;
   E.row[at].size = len;
   E.row[at].chars = malloc(len + 1); //mallco分配一個記憶體位置
-  memcpy(E.row.chars, s, len);  //memcpy拷貝linelen個字元從line中存到E.row.chars中
+  memcpy(E.row[at].chars, s, len);  //memcpy拷貝linelen個字元從line中存到E.row.chars中
   E.row[at].chars[len] = '\0'; //將最後結束點設為'\0'
   E.numrows = 1;
 }
