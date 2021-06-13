@@ -18,6 +18,7 @@
 /*** data ***/
 
 struct editorConfig {  //用來存取終端的寬度與高度
+  int cx, cy;  //初始化cx和cy用來來追蹤cursor的位置
   int screenrows;
   int screencols;
   struct termios orig_termios;
@@ -122,7 +123,7 @@ void abFree(struct abuf *ab) {
 void editorDrawRows(struct abuf *ab) {
   int y;
   for (y = 0; y < E.screenrows; y++) {
-    if(y == E.screenrows / 3){
+    if(y == E.screenrows / 3){ //在螢幕大小1/3的地方印
       char welcome[80];
       int welcomelen = snprintf(welcome, sizeof(welcome), "Kilo editor -- version %s", KILO_VERSION);
       if(welcomelen > E.screencols) welcomelen = E.screencols;
@@ -140,9 +141,7 @@ void editorDrawRows(struct abuf *ab) {
     abAppend(ab, "\x1b[K", 3);
     if(y < E.screenrows - 1){
       abAppend(ab, "\r\n", 2);
-    }
-
-     
+    }  
   }
 }
 
@@ -155,6 +154,10 @@ void editorRefreshScreen() {
 
   editorDrawRows(&ab);
 
+  char buf[32];
+  snprintf(buf, sizeof(buf), "x1b[%d;%dH", E.cy + 1, E.cx + 1);
+  abAppend(&ab, "\x1b[?25h", 6);
+
   abAppend(&ab, "\x1b[H", 3);
   abAppend(&ab, "\x1b[?25h", 6);
 
@@ -163,6 +166,23 @@ void editorRefreshScreen() {
 }
 
 /*** input ***/
+
+void editorMoveCursor(char key){  //運用上下左右鍵讓光標移動
+  switch(key) {
+    case 'a':
+      E.cx--;
+      break;
+    case 'd':
+      E.cx++;
+      break;
+    case 'w':
+      E.cy--;
+      break;
+    case 's':
+      E.cy++;
+      break;
+  }
+}
 
 void editorProcessKeypress() {
   char c = editorReadKey();
@@ -173,12 +193,23 @@ void editorProcessKeypress() {
       write(STDOUT_FILENO, "\x1b[H", 3);
       exit(0);
       break;
+
+    case 'w':
+    case 's':
+    case 'a':
+    case 'd':
+      editorMoveCursor(c);
+      break;
   }
 }
 
 /*** init ***/
 
 void initEditor() { //設置initEditor()來初始化E結構中的所有字段
+  
+  //設定cursor一開始的位置在(0,0)的位置
+  E.cx = 0; 
+  E.cy = 0;
   if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
 
