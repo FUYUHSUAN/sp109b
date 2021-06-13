@@ -17,7 +17,7 @@
 
 enum editprKey {  //在列舉中第一個設為1000，其他會依序設成1001,1002,1003
   ARROW_LEFT  = 1000,
-  ARROW_RIGHT ;
+  ARROW_RIGHT ,
   ARROW_UP ,
   ARROW_DOWN 
 };
