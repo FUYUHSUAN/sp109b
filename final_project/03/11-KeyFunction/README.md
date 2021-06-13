@@ -7,11 +7,16 @@
 * enum :列舉，一邊多用於只有少數值得類型
   ```c
   enum editprKey {  //在列舉中第一個設為1000，其他會依序設成1001,1002,1003
-    ARROW_LEFT  = 1000,
-    ARROW_RIGHT ,
-    ARROW_UP ,
-    ARROW_DOWN 
-  };
+  ARROW_LEFT  = 1000,
+  ARROW_RIGHT ,
+  ARROW_UP ,
+  ARROW_DOWN ,
+  DEL_KEY,
+  HOME_KEY,
+  END_KEY,
+  PAGE_UP,
+  PAGE_DOWN
+};
   ```
 
 ---
