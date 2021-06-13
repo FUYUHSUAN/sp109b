@@ -45,7 +45,7 @@ struct editorConfig {  //用來存取終端的寬度與高度
   int screenrows;
   int screencols;
   int numrows;
-  erow row;
+  erow *row;  //為了儲存多行，因此將row設為一個指針
   struct termios orig_termios;
 };
 
@@ -163,29 +163,38 @@ int getWindowSize(int *rows, int *cols) {
   }
 }
 
+/*** row operations ***/
+
+//將原本的editorOpen()中拉出來editorAppendRow()
+// editorAppendRow()為新的erow分配空間
+void editorAppendRow(char *s, size_t len){
+  E.row = realloc(E.row, sizeof(erow) * (E.numrows + 1)); //我們必須跟realloc()說要分配多少字節數(sizeof(erow))，乘上我們想要的行數
+
+  int at = E.numrows;
+  E.row[at].size = len;
+  E.row[at].chars = malloc(len + 1); //mallco分配一個記憶體位置
+  memcpy(E.row.chars, s, len);  //memcpy拷貝linelen個字元從line中存到E.row.chars中
+  E.row[at].chars[len] = '\0'; //將最後結束點設為'\0'
+  E.numrows = 1;
+}
+
 /***file i/o ***/
 
 void editorOpen(char *filename){
-  FILE *fp =   fopen(filename, "r");
+  FILE *fp = fopen(filename, "r");
   if(!fp) die("fopen");
 
   char *line = NULL;
   size_t linecap = 0;
   ssize_t linelen;
-  linelen = getline(&line, &linecap, fp);
-  if(linelen != -1){
+  while((linelen = getline(&line, &linecap, fp)) != -1){  //這行是讀多行的關鍵，當他讀完這個檔案，getline()會回傳-1
     while(linelen > 0 && (line[linelen - 1] == '\n' || line[linelen - 1] == '\r'))
-      linelen--;
+          linelen--;
 
-      E.row.size = linelen;
-      E.row.chars = malloc(linelen + 1); //mallco分配一個記憶體位置
-      memcpy(E.row.chars, line, linelen);  //memcpy拷貝linelen個字元從line中存到E.row.chars中
-      E.row.chars[linelen] = '\0'; //將最後結束點設為'\0'
-      E.numrows = 1;
+        editorAppendRow(line, linelen);
   }
   free(line);
   fclose(fp);
-  
 }
 
 /*** append buffer ***/
@@ -230,9 +239,9 @@ void editorDrawRows(struct abuf *ab) {
         abAppend(ab, "~", 1);
       }
     }else{
-      int len = E.row.size;
+      int len = E.row[y].size;
       if(len > E.screencols) len = E.screencols;
-      abAppend(ab, E.row.chars, len);
+      abAppend(ab, E.row[y].chars, len);
     }
     
 
@@ -335,6 +344,8 @@ void initEditor() { //設置initEditor()來初始化E結構中的所有字段
   E.cx = 0; 
   E.cy = 0;
   E.numrows = 0;
+  E.row = NULL;
+
   if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
 }
 
