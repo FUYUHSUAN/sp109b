@@ -42,6 +42,7 @@ typedef struct erow {  //存除役行指向動態分配的長度與指針
 
 struct editorConfig {  //用來存取終端的寬度與高度
   int cx, cy;  //初始化cx和cy用來來追蹤cursor的位置
+  int rowoff;  //跟蹤用戶當前滾動到文件的幾行
   int screenrows;
   int screencols;
   int numrows;
@@ -343,6 +344,7 @@ void initEditor() { //設置initEditor()來初始化E結構中的所有字段
   //設定cursor一開始的位置在(0,0)的位置
   E.cx = 0; 
   E.cy = 0;
+  E.rowoff = 0; //初始化為0，默認滾動到文件頂部
   E.numrows = 0;
   E.row = NULL;
 
