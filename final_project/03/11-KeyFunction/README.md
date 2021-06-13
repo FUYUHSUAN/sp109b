@@ -1,6 +1,6 @@
-# 增加PageUp&PageDown
+# 增加Keyfunction
 
-這段程式執行時，能夠讓光標自由上下左右移動
+這段程式執行時，增加了Page Up,Page Down,Home,End,Delete等功能
 
 * `strlen()` :來自<string.h>
 
