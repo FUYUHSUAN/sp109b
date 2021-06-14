@@ -221,10 +221,20 @@ void abFree(struct abuf *ab) {
 }
 /*** output ***/
 
+void editorScroll(){ //E.rowoff試紙屏幕頂部的內容
+  if(E.cy < E.rowoff){//檢查光標是否在可見窗口上，如果是則向上滾動到光標所在位置上
+    E.rowoff = E.cy;
+  }
+  if(E.cy >= E.rowoff + E.screenrows){ //是否越過可見窗口底部
+    E.rowoff = E.cy - E.screenrows + 1;
+  }
+}
+
 void editorDrawRows(struct abuf *ab) {
   int y;
   for (y = 0; y < E.screenrows; y++) {
-    if(y >= E.numrows){
+    int filerow = y + E.rowoff;  //用來顯示文件的正確行範圍
+    if(filerow >= E.numrows){
       if(E.numrows == 0 && y == E.screenrows / 3){ //在螢幕大小1/3的地方印
         char welcome[80];
         int welcomelen = snprintf(welcome, sizeof(welcome), "Kilo editor -- version %s", KILO_VERSION);
@@ -240,9 +250,9 @@ void editorDrawRows(struct abuf *ab) {
         abAppend(ab, "~", 1);
       }
     }else{
-      int len = E.row[y].size;
+      int len = E.row[filerow].size;
       if(len > E.screencols) len = E.screencols;
-      abAppend(ab, E.row[y].chars, len);
+      abAppend(ab, E.row[filerow].chars, len);
     }
     
 
@@ -254,6 +264,8 @@ void editorDrawRows(struct abuf *ab) {
 }
 
 void editorRefreshScreen() {
+  editorScroll(); //在刷新平目前調用此
+
   struct abuf ab = ABUF_INIT;
 
   abAppend(&ab, "\x1b[?25l", 6);
@@ -294,7 +306,7 @@ void editorMoveCursor(int key){  //運用上下左右鍵讓光標移動
       }
       break;
     case ARROW_DOWN:
-      if(E.cy != E.screenrows -1){
+      if(E.cy < E.screenrows){ //讓光標越過屏幕底部(但不能超過文件底部)
         E.cy++;
       }
       break;
