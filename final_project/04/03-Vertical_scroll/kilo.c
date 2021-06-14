@@ -306,7 +306,7 @@ void editorMoveCursor(int key){  //運用上下左右鍵讓光標移動
       }
       break;
     case ARROW_DOWN:
-      if(E.cy < E.screenrows){ //讓光標越過屏幕底部(但不能超過文件底部)
+      if(E.cy < E.numrows){ //讓光標越過屏幕底部(但不能超過文件底部)
         E.cy++;
       }
       break;
