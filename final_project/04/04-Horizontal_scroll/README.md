@@ -1,8 +1,6 @@
-# 垂直滾動
+# 水平滾動
 
-在這裡我們可以順利地翻動我們所讀到的檔案
-
-* 我們需要抓到屏幕的位置及文件的位置
+我們接下來做水平滾動，我們先加上`coloff`變量在editorConfig，這邊改的東西實際上跟垂直滾動差不多
 
 ```c
 void editorScroll(){ //E.rowoff試紙屏幕頂部的內容
@@ -12,8 +10,17 @@ void editorScroll(){ //E.rowoff試紙屏幕頂部的內容
   if(E.cy >= E.rowoff + E.screenrows){ //是否越過可見窗口底部
     E.rowoff = E.cy - E.screenrows + 1;
   }
+
+  if(E.cx < E.coloff){
+    E.coloff = E.cx;
+  }
+  if(E.cx >= E.coloff + E.screencols){
+    E.coloff = E.cx - E.screencols + 1;
+  }
 }
+
 ```
+
 ---
 **參考資料:**
 

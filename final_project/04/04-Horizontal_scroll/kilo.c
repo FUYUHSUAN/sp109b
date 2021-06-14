@@ -43,6 +43,7 @@ typedef struct erow {  //存除役行指向動態分配的長度與指針
 struct editorConfig {  //用來存取終端的寬度與高度
   int cx, cy;  //初始化cx和cy用來來追蹤cursor的位置
   int rowoff;  //跟蹤用戶當前滾動到文件的幾行
+  int coloff; //列(水平)位移變量
   int screenrows;
   int screencols;
   int numrows;
@@ -228,6 +229,13 @@ void editorScroll(){ //E.rowoff試紙屏幕頂部的內容
   if(E.cy >= E.rowoff + E.screenrows){ //是否越過可見窗口底部
     E.rowoff = E.cy - E.screenrows + 1;
   }
+
+  if(E.cx < E.coloff){
+    E.coloff = E.cx;
+  }
+  if(E.cx >= E.coloff + E.screencols){
+    E.coloff = E.cx - E.screencols + 1;
+  }
 }
 
 void editorDrawRows(struct abuf *ab) {
@@ -250,9 +258,10 @@ void editorDrawRows(struct abuf *ab) {
         abAppend(ab, "~", 1);
       }
     }else{
-      int len = E.row[filerow].size;
-      if(len > E.screencols) len = E.screencols;
-      abAppend(ab, E.row[filerow].chars, len);
+      int len = E.row[filerow].size - E.coloff;
+      if(len < 0) len = 0;
+      if(len > E.screencols) len = E.screencols;// E.coloff做為顯示每一行字符的索引，並從行的長度中減去篇一輛左側的字符數
+      abAppend(ab, &E.row[filerow].chars[E.coloff], len);   
     }
     
 
@@ -275,7 +284,7 @@ void editorRefreshScreen() {
   editorDrawRows(&ab);
 
   char buf[32];
-  snprintf(buf, sizeof(buf), "\x1b[%d;%dH", (E.cy - E.rowoff) + 1, E.cx + 1);
+  snprintf(buf, sizeof(buf), "\x1b[%d;%dH", (E.cy - E.rowoff) + 1,(E.cx - E.coloff) + 1);
   abAppend(&ab, buf, strlen(buf));
 
   //abAppend(&ab, "\x1b[H", 3);
@@ -290,9 +299,7 @@ void editorRefreshScreen() {
 void editorMoveCursor(int key){  //運用上下左右鍵讓光標移動
   switch(key) {
     case ARROW_LEFT:
-      if(E.cx != 0){
         E.cx--;
-      }
       break;
     case ARROW_RIGHT:
       if(E.cx != E.screencols-1){
@@ -356,6 +363,7 @@ void initEditor() { //設置initEditor()來初始化E結構中的所有字段
   E.cx = 0; 
   E.cy = 0;
   E.rowoff = 0; //初始化為0，默認滾動到文件頂部
+  E.coloff = 0;
   E.numrows = 0;
   E.row = NULL;
 
