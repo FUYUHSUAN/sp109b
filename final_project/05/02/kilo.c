@@ -24,7 +24,7 @@
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 enum editprKey {  //在列舉中第一個設為1000，其他會依序設成1001,1002,1003
-  BACKSPACE = 127;
+  BACKSPACE = 127,
   ARROW_LEFT  = 1000,
   ARROW_RIGHT ,
   ARROW_UP ,
