@@ -230,7 +230,7 @@ void editorAppendRow(char *s, size_t len){
 
 void editorRowInsertChar(erow *row, int at, int c){
   if(at < 0 || at > row->size) at = row->size;
-  row->chars = reallco(row->chars, row->size + 2); //+2是因為我們要為空字元騰出空間 
+  row->chars = realloc(row->chars, row->size + 2); //+2是因為我們要為空字元騰出空間 
   memmove(&row->chars[at + 1], &row->chars[at], row->size - at + 1);  //用memmove為新字符騰出空間
   row->size++;
   row->chars[at] = c;
