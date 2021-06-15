@@ -1,5 +1,5 @@
 # 插入基本的字元
-先嘗試插入單一字元到erow中，並得到位置
+先嘗試插入單一字元到erow中，並得到位置(目前這段只是單純可以插入文字)
 
 * `memmove()` 來自 <string.h>
   * `void * mommove(void *str1, const void *str2, size_t n`: 複製n個字符從str2到str1
