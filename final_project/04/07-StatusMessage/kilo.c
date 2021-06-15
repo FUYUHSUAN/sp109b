@@ -381,7 +381,7 @@ void editorRefreshScreen() {
   abFree(&ab);
 }
 
-void editorSetStatusMessage(count char *fmt, ...){
+void editorSetStatusMessage(const char *fmt, ...){
   va_list ap;
   va_start(ap, fmt);
   vsnprintf(E.statusmsg, sizeof(E.statusmsg), fmt, ap); //vsnprintf幫助我們製作自己的printf()風格函數，並將結果字符串儲存至E.statusmsg 中
