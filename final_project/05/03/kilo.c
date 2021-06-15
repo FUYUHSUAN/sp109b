@@ -502,6 +502,8 @@ void editorMoveCursor(int key){  //運用上下左右鍵讓光標移動
 }
 
 void editorProcessKeypress() {
+  static int quit_times = KILO_QUIT_TIMES;
+  
   int c = editorReadKey();
 
   switch (c) {
