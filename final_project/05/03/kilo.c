@@ -56,6 +56,7 @@ struct editorConfig {  //用來存取終端的寬度與高度
   int screencols;
   int numrows;
   erow *row;  //為了儲存多行，因此將row設為一個指針
+  int dirty;
   char *filename;
   char statusmsg[80];  //用來儲存現階段的訊息
   time_t statusmsg_time;   //增加時間戳，可以在幾秒鐘後將訊息刪除
@@ -231,6 +232,7 @@ void editorAppendRow(char *s, size_t len){
   editorUpdateRow(&E.row[at]);
 
   E.numrows ++;
+  E.dirty++;
 }
 
 void editorRowInsertChar(erow *row, int at, int c){
@@ -240,6 +242,7 @@ void editorRowInsertChar(erow *row, int at, int c){
   row->size++;
   row->chars[at] = c;
   editorUpdateRow(row);  //使用新航的內容更新和rsize字段
+  E.dirty++;
 }
 
 /***editor operations***/
@@ -290,6 +293,7 @@ void editorOpen(char *filename){
   }
   free(line);
   fclose(fp);
+  E.dirty = 0;
 }
 
 void editorSave() {
@@ -304,6 +308,7 @@ void editorSave() {
       if (write(fd, buf, len) == len) {
         close(fd);
         free(buf);
+        E.dirty = 0;
         editorSetStatusMessage("%d bytes written to disk", len);
         return;
       }
@@ -395,8 +400,9 @@ void editorDrawRows(struct abuf *ab) {
 void editorDrawStatusBar(struct abuf *ab) {
   abAppend(ab, "\x1b[7m", 4);
   char status[80], rstatus[80];
-  int len = snprintf(status, sizeof(status), "%.20s - %d lines",
-    E.filename ? E.filename : "[No Name]", E.numrows);
+  int len = snprintf(status, sizeof(status), "%.20s - %d lines %s",
+    E.filename ? E.filename : "[No Name]", E.numrows,
+    E.dirty ? "(modified)" : "");
   int rlen = snprintf(rstatus, sizeof(rstatus), "%d/%d",
     E.cy + 1, E.numrows);
   if (len > E.screencols) len = E.screencols;
@@ -573,6 +579,7 @@ void initEditor() { //設置initEditor()來初始化E結構中的所有字段
   E.coloff = 0;
   E.numrows = 0;
   E.row = NULL;
+  E.dirty = 0;
   E.filename = NULL;
   E.statusmsg[0] = '\0';  //初始化為空字串，因此默認情控下不會顯示任何消息
   E.statusmsg_time = 0;   //包含我們設置消息狀態時的時間戳
