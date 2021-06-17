@@ -564,6 +564,15 @@ char *editorPrompt(char *prompt) {
   }
 }
 
+void editorRowJump(){
+  char *query = editorPrompt("Jump to : %s"); 
+  if (query == NULL) return;
+
+  E.cy = atoi(query)-1;
+
+  free(query);
+}
+
 void editorMoveCursor(int key){  //運用上下左右鍵讓光標移動
   erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
   switch(key) {
@@ -622,6 +631,10 @@ void editorProcessKeypress() {
       write(STDOUT_FILENO, "\x1b[2J", 4);
       write(STDOUT_FILENO, "\x1b[H", 3);
       exit(0);
+      break;
+
+    case CTRL_KEY('r'):
+      editorRowJump();
       break;
 
     case CTRL_KEY('s'):
