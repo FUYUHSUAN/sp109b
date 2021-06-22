@@ -568,7 +568,7 @@ void editorRowJump(){
   char *query = editorPrompt("Jump to : %s"); 
   char status[80];
   if (query == NULL) return;
-  if( atoi(query) > 0 ) //E.cy < E.numrows &&
+  if( atoi(query) > 0 && atoi(query) <=  E.numrows ) 
     E.cy = atoi(query)-1;
 
   free(query);
