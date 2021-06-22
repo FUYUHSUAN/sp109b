@@ -564,15 +564,6 @@ char *editorPrompt(char *prompt) {
   }
 }
 
-void editorRowJump(){
-  char *query = editorPrompt("Jump to : %s"); 
-  if (query == NULL) return;
-
-  E.cy = atoi(query)-1;
-
-  free(query);
-}
-
 void editorMoveCursor(int key){  //運用上下左右鍵讓光標移動
   erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
   switch(key) {
@@ -624,17 +615,13 @@ void editorProcessKeypress() {
     case CTRL_KEY('w'):
       if (E.dirty && quit_times > 0) {
         editorSetStatusMessage("WARNING!!! File has unsaved changes. "
-          "Press Ctrl-Q %d more times to quit.", quit_times);
+          "Press Ctrl-W %d more times to quit.", quit_times);
         quit_times--;
         return;
       }
       write(STDOUT_FILENO, "\x1b[2J", 4);
       write(STDOUT_FILENO, "\x1b[H", 3);
       exit(0);
-      break;
-
-    case CTRL_KEY('r'):
-      editorRowJump();
       break;
 
     case CTRL_KEY('s'):
@@ -720,7 +707,7 @@ int main(int argc, char *argv[]) {
     editorOpen(argv[1]);
   }
 
-   editorSetStatusMessage("HELP: Ctrl-S = save | Ctrl-Q = quit");
+   editorSetStatusMessage("HELP: Ctrl-S = save | Ctrl-W = quit");
 
   while (1) {
     editorRefreshScreen();
