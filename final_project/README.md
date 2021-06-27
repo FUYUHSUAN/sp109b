@@ -3,6 +3,7 @@
 >* 班級:資工二
 >* 姓名:傅于軒
 >* 指導老師:陳鍾誠老師
+>* 來源非100%原創，參考[kilo](https://viewsourcecode.org/snaptoken/kilo/index.html)來學習製作，在[06](https://github.com/FUYUHSUAN/sp109b/tree/main/final_project/06-Try_by_myself/01)是學期kilo功能自行做出來的
 
 ## 目錄
 
